@@ -1,0 +1,115 @@
+---
+title: "I Drew the Julia Logo Using an MRI Machine"
+author: "Carlos Castillo-Passi"
+date: 2025-11-3
+description: "How the physics of MRI can be used to draw with spins and why this is useful."
+toc: true
+toc-location: left
+categories: 
+    - Bloch simulations
+    - MRI physics
+    - Automatic differentiation
+image: figures/rf_2dexcitation_logo.gif
+---
+
+# Magnetic resonance
+
+It all starts with **resonance**. What does that even mean? Long ago, physicist Joseph Larmor discovered that the frequency $f$ at which spins precess depends on the magnetic field strength $B$:
+$$
+f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
+$$
+The constant $\gamma/2\pi$ is known as the gyromagnetic ratio. For hydrogen (protons), which MRI typically detects, $\gamma/2\pi = 42.58\,\mathrm{MHz/T}$. In a typical MRI scanner with a field strength of $3\mathrm{T}$, the Larmor (precession) frequency for hydrogen protons is about $127.74\ \mathrm{MHz}$, which lies in the FM radio band!
+
+If we apply a radio-frequency (RF) pulse at that frequency — the RF field commonly denoted $B_1$ in MRI — it will tip the spins away from alignment with the main magnetic field, $B_0$ (the z-direction). **This is analogous to pushing a child on a swing**: if the pushes are applied at the correct intervals, the swing's amplitude increases. Oh! So that is resonance!
+
+![Fig. 1: The $B_1$ pulse (blue) tips the spins' magnetization at the precession (Larmor) frequency. As the magnetization is tipped, it becomes measurable (we measure the xy-component with MRI), as shown by the color change to yellow.](figures/rf_excitation_onespin.gif)
+
+Because visualizing spins and RF fields oscillating at the Larmor frequency all the time is tedious, we work in the "rotating frame." Imagine rotating at the same rate as the spins precess so that the fast Larmor rotation disappears in this moving frame. The RF field then appears as a slowly varying complex envelope (amplitude and phase) that actually controls the spins. This simplifies the picture: we need only think about the RF envelope, not the high‑frequency carrier. We will use this rotating frame from now on.
+
+# Slice selection
+
+To get a 2D picture from a 3D object we first pick a thin slice (**like cutting a cheese slice**). MRI can do this because the scanner can add a magnetic-field gradient $G_z$ along the $z$ axis. That gradient makes the Larmor frequency vary with position: spins at different $z$ positions precess at different frequencies. In other words, **frequency becomes a spatial label**.
+
+If we transmit an RF pulse whose spectrum covers only a small band of frequencies, only spins whose Larmor frequency lies in that band will be tipped — so only that z-range (the slice) is excited. Using the Fourier-transform, a narrow, rectangular passband in frequency corresponds to a long **sinc pulse** in time. So, to excite a slice you play a sinc‑shaped RF envelope while the $G_z$ gradient is on. The width of the slice is set by the gradient strength and the bandwidth of the RF pulse.
+
+Because the gradient is on while the RF is applied, spins at different z positions accumulate different phases. To undo that extra phase (so the excited spins are coherent within the slice) we apply a small "refocusing" or rephasing gradient lobe after the RF. That final lobe re-centers the phase across the slice and leaves us with a clean, selectively excited 2D slab ready for further manipulation or imaging.
+
+![Fig. 2: The scanner selects a thin slice by briefly applying a magnetic-field gradient and a shaped radio‑frequency (RF) pulse. The RF pulse only tips spins inside the slice (shown in yellow); spins outside remain aligned with the main field and are not detected.](figures/rf_excitation.gif)
+
+If you've ever had an MRI scan, you've experienced slice selection. This standard and widely used technique lets MRI acquire 2D slices.
+
+![Fig. 3: Example of slice selection on an MRI console. The highlighted box shows the planned cross‑section (a horizontal slice) through the middle of the brain. The scanner displays this slice during planning and then shows the acquired image for that slice in the image panel. [Source](https://mrimaster.com/planning/)](figures/brain_slice_selection.png)
+
+# 2D excitation
+
+So far we used a gradient along z to select a thin slice in the z-direction (1D pattern). Can we excite an arbitrary 2D pattern? Yes.
+
+By playing time‑varying gradients in two orthogonal directions (x and y) while transmitting a shaped RF waveform, the RF tips spins at specific x–y locations. A simple picture: the gradients change which position is "in tune" with the RF, and the RF turns spins on at those positions — like steering a paintbrush while painting. 
+
+Under the common "small‑tip‑angle" approximation, the excited transverse magnetization pattern is (approximately) the 2D Fourier transform of the RF waveform sampled along the path the gradients trace through "excitation k‑space." Excitation k‑space is the 2D Fourier domain: each k‑space coordinate corresponds to a spatial frequency. By choosing the k‑space trajectory (for example, spiral) and designing the RF accordingly, you can synthesize many useful 2D patterns; the trajectory's extent and sampling density set the achievable field‑of‑view and resolution.
+
+![Fig. 4: A "pencil‑beam" excitation. A spiral gradient steers which location is in resonance while a jinc‑shaped RF pulse tips spins at those locations, producing a narrow cylindrical region of excited signal (like a pencil).](figures/rf_2dexcitation.gif)
+
+A “pencil‑beam” excitation creates a narrow, cylindrical region of magnetization. By positioning this small beam over the liver you get a continuous signal that changes as the patient breathes: the liver moves with respiration, and that motion modifies the measured signal. This motion signal is used as a respiratory trace to accept data only during a chosen breathing phase (for example, end‑expiration) and to reject data acquired at other times, **reducing motion artifacts in cardiac MRI**.
+
+![Fig. 5: Respiratory trace from a pencil‑beam excitation. The beam monitors motion along the head–foot (z) axis, the blue band is the acceptance window around end‑expiration. [Source](https://i-mri.org/ViewImage.php?Type=F&aid=727808&id=F7&afn=1040_IMRI_25_4_209&fn=imri-25-209-g007_1040IMRI)](figures/cardiac_mri_2d_excitation.png)
+
+# Designing arbitrary 2D excitation pulses
+
+Now that we know 2D excitation is possible and have an intuition for how it works, how do we design an RF pulse that produces a specific 2D pattern?
+
+We pose this as an **inverse problem** — that is, we look for the input (the RF pulse) that produces a desired output (the magnetization pattern). Or the cause of a given effect. The **forward model** $\mathbf{A}(\mathbf{x})$ predicts the transverse magnetization produced when we play an RF waveform $\mathbf{x}$ (and the chosen gradient waveforms). If our desired magnetization pattern is $\mathbf{b}$, we can formulate the design as a **least‑squares optimization problem**:
+
+$$
+\min_{\mathbf{x}} \Vert \mathbf{A}(\mathbf{x}) - \mathbf{b} \Vert_2^2.
+$$
+
+Here the forward model $\mathrm{\mathbf{A}}(\mathbf{x})$ is implemented by a **physics simulation**: we numerically solve the Bloch equations for a given RF waveform and gradient trajectory to predict the resulting transverse magnetization. Rather than reimplementing those equations, we use the Julia package [KomaMRI.jl](https://github.com/JuliaHealth/KomaMRI.jl) to run the simulation and obtain $\mathrm{\mathbf{A}}(\mathbf{x})$.
+
+```julia
+using KomaMRICore
+# A(x) - our forward model
+function forward(x, params)
+    seq_aux = copy(params.seq)
+    seq_aux.RF[1].A .= x # Update RF pulse
+    mag = simulate(params.obj, seq_aux, params.sys; params.sim_params)
+    return mag
+end
+# ||A(x) - b||2^2 - our loss function
+function loss(x, params)
+    mag = forward(x, params)
+    return sum(abs2, mag.xy .- params.target_profile) / length(mag.xy)
+end
+```
+
+Then, to optimize this loss function we need to calculate a gradient using [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl) or [Enzyme.jl](https://github.com/EnzymeAD/Enzyme.jl). For example, using FiniteDiff.jl it would look like this:
+
+```julia
+calc_grad!(∇loss, x, params) = FiniteDiff.finite_difference_gradient!(∇loss, x -> loss(x, params), x)
+```
+
+Finally, we can use a method like Malitsky-Mishchenko adaptive **gradient descent** to solve our inverse problem.
+
+![Fig. 6a: Design of a complex 2D RF excitation minimizing mean squared error. (A) The target magnetization profile matches a logo. The simulated magnetization (B) used during RF pulse optimization closely matched the measured magnetization (D) obtained by executing the optimized RF pulse (C) with Pulseq on a real MRI scanner.](figures/figure_6_optimization.gif)
+
+![Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see an spherical water bottle that I used for all these experiments.](figures/PXL_20251023_170128686.jpg)
+
+The previous optimization (Fig. 6) took around 5 hours, as it run on the CPU using [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl). We did the same using **GPU kernels** using [KernelAbstractions.jl](https://github.com/JuliaGPU/KernelAbstractions.jl) and [Enzyme.jl](https://github.com/EnzymeAD/Enzyme.jl) using reverse-mode AD and we **were able to optimize this in under 5 seconds**.
+
+And now the star of the show, the **Julia logo**, in all its spins' glory:
+
+![Fig. 7: Optimized RF pulse imprints the Julia logo in the spins of a simulated water bottle.](figures/rf_2dexcitation_logo.gif)
+
+These optimized pulses (and others) were validated on a **real MRI scanner**, and the acquired images closely matched the simulations from [KomaMRI.jl](https://github.com/JuliaHealth/KomaMRI.jl).
+
+![Fig. 8: (A-C) Target 2D RF excitation patterns and (D-F) reconstructed 2D magnetization patterns from the optimized RF pulses obtained in a spherical phantom. The results demonstrate good correspondence between targets (A-C) and reconstructed profiles (D-F). The red dashed line shows the spherical phantom's boundary. (G-I) Shows the optimized RF pulses that were used for the acquisitions. ](figures/figure_4_more_logos.png)
+
+# Conclusions
+
+Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to "draw" the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demostration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person's anatomy or implants to improve image quality and reduce artifacts.
+
+This work was submitted as an abstract to the upcoming International Society for Magnetic Resonance in Medicine (ISMRM) conference.
+
+# Acknowledgemnts
+
+This work would not have been possible without many Julia packages: CUDA.jl, KernelAbstractions.jl, Enzyme.jl, FiniteDiff.jl, Makie.jl, KomaMRI.jl, and others. Thanks to the Julia community for being awesome 😊. Special thanks to Kareem Fareed, who implemented the Enzyme-based version of this work, to John Pauly for insightful discussions, and to Daniel Ennis for his supervision and continuous support.

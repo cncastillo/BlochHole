@@ -1,0 +1,21 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: twitter
+      text: Twitter
+      href: https://x.com/Carlos_CP92
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/carlos-castillo-passi-468367146/
+    - icon: github
+      text: Github
+      href: https://github.com/cncastillo
+
+---
+
+This is a space where I share some of the projects I’ve been developing.
+
+I’m **Carlos Castillo-Passi**, a postdoctoral researcher in the Department of Radiology at Stanford University. I’m passionate about MRI simulation, GPU computing, and solving optimization problems.
