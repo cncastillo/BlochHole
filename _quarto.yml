@@ -3,18 +3,21 @@ project:
 
 website:
   title: "Bloch Hole"
+  site-url: https://cncastillo.github.io/BlochHole
+  open-graph: true
+  twitter-card: true
   navbar:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/cncastillo
       - icon: twitter
-        href: https://twitter.com
+        href: https://x.com/Carlos_CP92
 format:
   html:
     theme:
       - litera
-      # - brand
+      - brand
     css: styles.css
 
 
