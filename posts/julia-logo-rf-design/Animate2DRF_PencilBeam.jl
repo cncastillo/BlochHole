@@ -2,28 +2,23 @@
 # add https://github.com/JuliaHealth/KomaMRI.jl:KomaMRICore#fix-sim-block-issue
 using GLMakie
 using KomaMRICore
+using JLD2
 
 ## Params to get a slice profile of Δz = 6mm
-B1 = 4.9e-6 * 2 * 3 / 2
-Trf = 3.2e-3
-TBP = 8
-Δz = 4e-3
-zmax = 5e-3
-fmax = TBP / Trf
-Nspins = 40 # Use an even number to not have z = 0 in the grid
+zmax = 60e-3
+Nspins = 20 # Use an even number to not have z = 0 in the grid
 z = range(-zmax, zmax, Nspins) |> collect
-Gz = fmax / (γ * Δz)
-f = γ * Gz * z
 xs = copy(z)
-zs = copy(z)
-x = [x for (x, z) in Iterators.product(xs, zs)][:]
-z = [z for (x, z) in Iterators.product(xs, zs)][:]
+ys = copy(z)
+x = [x for (x, y) in Iterators.product(xs, ys)][:]
+y = [y for (x, y) in Iterators.product(xs, ys)][:]
 
 # Setting up input objects
 sys = Scanner()
-seq = PulseDesigner.RF_sinc(B1 .+ 0im, Trf, sys; G=[0; 0; Gz], TBP=TBP)
-seq.ADC[1] = ADC(120, dur(seq))
-obj = Phantom(; x, z)
+seq = load(joinpath(@__DIR__, "Circle_waveform_resampled.jld2"))["seq_resampled"]
+seq.ADC[1] = ADC(120, dur(seq)/2, dur(seq)/2)
+seq = (3.0 .+ 0im) * seq # Scale B1 amplitude
+obj = Phantom(; x, y)
 # plot_seq(seq; show_adc=true)
 
 ## Simulate
@@ -62,16 +57,16 @@ ax.zlabelsize = 90
 
 ar = arrows3d!(ax,
     x .* 1e3,
+    y .* 1e3,
     zeros(length(x)) .* 1e3,
-    z .* 1e3,
     us, vs, ws;
-    lengthscale = 0.4,
+    lengthscale = 6,
     color = saturation,
     align = :center,
     colorrange=(0.0, 1.0),
     # colormap=:grays
 )
-lines!(ax, 1e3 .* zmax .* ones(size(z)), saturation2, z .* 1e3; color=saturation, colorrange=(0.0, 1.0), linewidth=5)
+# lines!(ax, 1e3 .* zmax .* ones(size(z)), saturation2, z .* 1e3; color=saturation, colorrange=(0.0, 1.0), linewidth=5)
 
 ax2 = Axis(fig[1, 1], backgroundcolor = :black)
 seqd = discretize(seq)
@@ -79,10 +74,13 @@ t = seqd.t .* 1e3
 t_adc = t[seqd.ADC]
 current_time = @lift(t_adc[$i])
 B1 = seqd.B1 .* 1e6 .* 0.8
-Gz = seqd.Gz .* 1e3
+Gx = seqd.Gx .* 1e3
+Gy = seqd.Gy .* 1e3
 vlines!(ax2, current_time, color=:white, linewidth=5)
 lines!(ax2, t[B1 .!= 0], real.(B1[B1 .!= 0]), linewidth=5, label=L"B_1")
-lines!(ax2, t, Gz, linewidth=5, label=L"G_z")
+lines!(ax2, t, Gx, linewidth=5, label=L"G_x")
+lines!(ax2, t, Gy, linewidth=5, label=L"G_y")
+xlims!(ax2, maximum(t)/2, maximum(t))
 hidespines!(ax2)
 hidedecorations!(ax2)
 leg = axislegend(ax2, labelcolor=:white, backgroundcolor=(:black, 1), framecolor=:black, labelsize=90)
@@ -97,7 +95,8 @@ display(fig)
 nframes = size(mag, 1)
 frames0 = collect(1:nframes)
 frames = [frames0; last(frames0) * ones(40)] # Hold the last frame for a while
-record(fig, "figures/rf_excitation.gif", frames; framerate = 20) do k
+gif_path = joinpath(@__DIR__, "figures", "rf_2dexcitation.gif")
+record(fig, gif_path, frames; framerate = 20) do k
     i[] = k
 end
 

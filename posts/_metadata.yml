@@ -6,3 +6,9 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true
+
+citation: true
+
+crossref:
+  fig-prefix: Figure
+  tbl-prefix: Table

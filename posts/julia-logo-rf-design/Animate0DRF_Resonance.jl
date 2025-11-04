@@ -101,7 +101,8 @@ display(fig)
 nframes = size(mag, 1)
 frames0 = collect(1:nframes)
 frames = [frames0; last(frames0) * ones(40)] # Hold the last frame for a while
-record(fig, "figures/rf_excitation_onespin.gif", frames; framerate = 20) do k
+gif_path = joinpath(@__DIR__, "figures", "rf_excitation_onespin.gif")
+record(fig, gif_path, frames; framerate = 20) do k
     i[] = k
 end
 

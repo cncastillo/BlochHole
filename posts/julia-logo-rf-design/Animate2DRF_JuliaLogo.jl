@@ -12,10 +12,14 @@ xs = copy(z)
 ys = copy(z)
 x = [x for (x, y) in Iterators.product(xs, ys)][:]
 y = [y for (x, y) in Iterators.product(xs, ys)][:]
+x_grid_mm = reshape(x .* 1e3, length(xs), length(ys))
+y_grid_mm = reshape(y .* 1e3, length(xs), length(ys))
+heatmap_plane_z = fill(-zmax * 1e3, size(x_grid_mm))
+plane_shape = size(x_grid_mm)
 
 # Setting up input objects
 sys = Scanner()
-seq = load("JuliaLogo_waveform_resampled.jld2")["seq_resampled"]
+seq = load(joinpath(@__DIR__, "JuliaLogo_waveform_resampled.jld2"))["seq_resampled"]
 seq.ADC[1] = ADC(120, dur(seq)/2, dur(seq)/2)
 seq = (3.0 .+ 0im) * seq # Scale B1 amplitude
 obj = Phantom(; x, y)
@@ -36,6 +40,20 @@ ws = @lift(real.(mag[$i, :, 2]))
 saturation = @lift(abs.(mag[$i, :, 1]))
 saturation2 = @lift(-3 .* abs.(mag[$i, :, 1]))
 hue = @lift(angle.(mag[$i, :, 1]))
+seqd = discretize(seq)
+t = seqd.t .* 1e3
+t_adc = t[seqd.ADC]
+current_time = @lift(t_adc[$i])
+B1 = seqd.B1 .* 1e6 .* 0.8
+Gx = seqd.Gx .* 1e3
+Gy = seqd.Gy .* 1e3
+Gz = seqd.Gz .* 1e3
+
+# Show magnetic field 
+# Gx_adc = Gx[seqd.ADC]
+# Gy_adc = Gy[seqd.ADC]
+# Gz_adc = Gz[seqd.ADC]
+# B_plane = @lift(reshape(abs.(x .* Gx_adc[$i] .+ y .* Gy_adc[$i]).^2, plane_shape...))
 
 fig = Figure(size = (1800, 1800), fontsize=40, backgroundcolor = :black)
 ax = Axis3(fig[2, 1], aspect = (1, 1, 1), xlabel=L"x", ylabel=L"y", zlabel=L"z", backgroundcolor=:black)
@@ -55,6 +73,9 @@ ax.xlabelsize = 90
 ax.ylabelsize = 90
 ax.zlabelsize = 90
 
+# Show magnetic field plane
+# surface!(ax, x_grid_mm, y_grid_mm, heatmap_plane_z; color=B_plane, colormap=:grays, shading=false)
+
 ar = arrows3d!(ax,
     x .* 1e3,
     y .* 1e3,
@@ -69,13 +90,6 @@ ar = arrows3d!(ax,
 # lines!(ax, 1e3 .* zmax .* ones(size(z)), saturation2, z .* 1e3; color=saturation, colorrange=(0.0, 1.0), linewidth=5)
 
 ax2 = Axis(fig[1, 1], backgroundcolor = :black)
-seqd = discretize(seq)
-t = seqd.t .* 1e3
-t_adc = t[seqd.ADC]
-current_time = @lift(t_adc[$i])
-B1 = seqd.B1 .* 1e6 .* 0.8
-Gx = seqd.Gx .* 1e3
-Gy = seqd.Gy .* 1e3
 vlines!(ax2, current_time, color=:white, linewidth=5)
 lines!(ax2, t[B1 .!= 0], real.(B1[B1 .!= 0]), linewidth=5, label=L"B_1")
 lines!(ax2, t, Gx, linewidth=5, label=L"G_x")
@@ -95,7 +109,8 @@ display(fig)
 nframes = size(mag, 1)
 frames0 = collect(1:nframes)
 frames = [frames0; last(frames0) * ones(40)] # Hold the last frame for a while
-record(fig, "figures/rf_2dexcitation_logo.gif", frames; framerate = 20) do k
+gif_path = joinpath(@__DIR__, "figures", "rf_2dexcitation_logo.gif")
+record(fig, gif_path, frames; framerate = 20) do k
     i[] = k
 end
 
