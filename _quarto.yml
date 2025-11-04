@@ -20,9 +20,3 @@ format:
 comments:
   giscus: 
     repo: cncastillo/BlochHole
-listing:
-  contents: posts
-  fields: [image, date, title, description, reading-time, author]
-
-
-
