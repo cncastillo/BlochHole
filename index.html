@@ -79,7 +79,7 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-reading-time','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
       searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
     };
@@ -200,6 +200,15 @@ window.Quarto = {
 <h3 class="no-anchor listing-title">
 <a href="./posts/julia-logo-rf-design/spins_draw_the_julia_logo.html" class="no-external">I Drew the Julia Logo Using an MRI Machine</a>
 </h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QmxvY2glMjBzaW11bGF0aW9ucw=='); return false;">Bloch simulations</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TVJJJTIwcGh5c2ljcw=='); return false;">MRI physics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXV0b21hdGljJTIwZGlmZmVyZW50aWF0aW9u'); return false;">Automatic differentiation</div>
+
+</div>
 <div class="delink listing-description"><a href="./posts/julia-logo-rf-design/spins_draw_the_julia_logo.html" class="no-external">
 <p>How the physics of MRI can be used to draw with spins and why this is useful.</p>
 </a></div>
@@ -212,7 +221,6 @@ Nov 3, 2025
 <div class="listing-author">
 Carlos Castillo-Passi
 </div>
-<div class="listing-reading-time">8 min</div>
 </a>
 </div>
 </div>
