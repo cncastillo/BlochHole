@@ -1,1 +1,9 @@
 /* css styles */
+/* Increase space between post title and category pills in blog index */
+.quarto-listing .listing-title {
+  margin-bottom: 0.4rem !important;  /* default is around 0.1rem */
+}
+
+.quarto-listing .listing-categories {
+  margin-top: 0.4rem !important;     /* add a bit more breathing room */
+}

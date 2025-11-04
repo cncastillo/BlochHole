@@ -14,8 +14,7 @@ website:
 format:
   html:
     theme:
-      - litera
-      - brand
+      - cosmo
     css: styles.css
 comments:
   giscus: 
