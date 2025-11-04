@@ -20,5 +20,9 @@ format:
       - brand
     css: styles.css
 
+comments:
+  giscus: 
+    repo: cncastillo/BlochHole
+
 
 
