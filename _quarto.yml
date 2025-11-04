@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "Bloch Hole"
+  title: "Bloch Hole - The fun side of serious science"
   site-url: https://cncastillo.github.io/BlochHole
   open-graph: true
   twitter-card: true
