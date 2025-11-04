@@ -336,10 +336,10 @@ f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/PXL_20251023_170128686.jpg" class="img-fluid figure-img"></p>
-<figcaption>Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see an spherical water bottle that I used for all these experiments.</figcaption>
+<figcaption>Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see a spherical water bottle that I used for all these experiments.</figcaption>
 </figure>
 </div>
-<p>The previous optimization (Fig. 6) took around 5 hours, as it run on the CPU using <a href="https://github.com/JuliaDiff/FiniteDiff.jl">FiniteDiff.jl</a>. We did the same using <strong>GPU kernels</strong> using <a href="https://github.com/JuliaGPU/KernelAbstractions.jl">KernelAbstractions.jl</a> and <a href="https://github.com/EnzymeAD/Enzyme.jl">Enzyme.jl</a> using reverse-mode AD and we <strong>were able to optimize this in under 5 seconds</strong>.</p>
+<p>The previous optimization (Fig. 6) took around 5 hours, as it ran on the CPU using <a href="https://github.com/JuliaDiff/FiniteDiff.jl">FiniteDiff.jl</a>. We did the same using <strong>GPU kernels</strong> using <a href="https://github.com/JuliaGPU/KernelAbstractions.jl">KernelAbstractions.jl</a> and <a href="https://github.com/EnzymeAD/Enzyme.jl">Enzyme.jl</a> using reverse-mode AD and we <strong>were able to optimize this in under 5 seconds</strong>.</p>
 <p>And now the star of the show, the <strong>Julia logo</strong>, in all its spins’ glory:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -357,7 +357,7 @@ f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
-<p>Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to “draw” the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demostration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person’s anatomy or implants to improve image quality and reduce artifacts.</p>
+<p>Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to “draw” the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demonstration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person’s anatomy or implants to improve image quality and reduce artifacts.</p>
 <p>This work was submitted as an abstract to the upcoming International Society for Magnetic Resonance in Medicine (ISMRM) conference.</p>
 </section>
 <section id="acknowledgments" class="level1">
