@@ -13,7 +13,7 @@ about:
     - icon: github
       text: Github
       href: https://github.com/cncastillo
-
+comments: false
 ---
 
 I’m **Carlos Castillo-Passi**, a postdoctoral researcher in the Department of Radiology at Stanford University. I’m passionate about MRI simulation, GPU computing, and solving optimization problems.
