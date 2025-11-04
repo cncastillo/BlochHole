@@ -110,6 +110,6 @@ Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses wer
 
 This work was submitted as an abstract to the upcoming International Society for Magnetic Resonance in Medicine (ISMRM) conference.
 
-# Acknowledgemnts
+# Acknowledgments
 
 This work would not have been possible without many Julia packages: CUDA.jl, KernelAbstractions.jl, Enzyme.jl, FiniteDiff.jl, Makie.jl, KomaMRI.jl, and others. Thanks to the Julia community for being awesome 😊. Special thanks to Kareem Fareed, who implemented the Enzyme-based version of this work, to John Pauly for insightful discussions, and to Daniel Ennis for his supervision and continuous support.
