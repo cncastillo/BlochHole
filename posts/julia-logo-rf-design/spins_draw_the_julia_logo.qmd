@@ -92,9 +92,9 @@ Finally, we can use a method like Malitsky-Mishchenko adaptive **gradient descen
 
 ![Fig. 6a: Design of a complex 2D RF excitation minimizing mean squared error. (A) The target magnetization profile matches a logo. The simulated magnetization (B) used during RF pulse optimization closely matched the measured magnetization (D) obtained by executing the optimized RF pulse (C) with Pulseq on a real MRI scanner.](figures/figure_6_optimization.gif)
 
-![Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see an spherical water bottle that I used for all these experiments.](figures/PXL_20251023_170128686.jpg)
+![Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see a spherical water bottle that I used for all these experiments.](figures/PXL_20251023_170128686.jpg)
 
-The previous optimization (Fig. 6) took around 5 hours, as it run on the CPU using [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl). We did the same using **GPU kernels** using [KernelAbstractions.jl](https://github.com/JuliaGPU/KernelAbstractions.jl) and [Enzyme.jl](https://github.com/EnzymeAD/Enzyme.jl) using reverse-mode AD and we **were able to optimize this in under 5 seconds**.
+The previous optimization (Fig. 6) took around 5 hours, as it ran on the CPU using [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl). We did the same using **GPU kernels** using [KernelAbstractions.jl](https://github.com/JuliaGPU/KernelAbstractions.jl) and [Enzyme.jl](https://github.com/EnzymeAD/Enzyme.jl) using reverse-mode AD and we **were able to optimize this in under 5 seconds**.
 
 And now the star of the show, the **Julia logo**, in all its spins' glory:
 
@@ -106,7 +106,7 @@ These optimized pulses (and others) were validated on a **real MRI scanner**, an
 
 # Conclusions
 
-Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to "draw" the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demostration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person's anatomy or implants to improve image quality and reduce artifacts.
+Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to "draw" the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demonstration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person's anatomy or implants to improve image quality and reduce artifacts.
 
 This work was submitted as an abstract to the upcoming International Society for Magnetic Resonance in Medicine (ISMRM) conference.
 
