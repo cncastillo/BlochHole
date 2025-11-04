@@ -3,8 +3,6 @@ title: "I Drew the Julia Logo Using an MRI Machine"
 author: "Carlos Castillo-Passi"
 date: 2025-11-3
 description: "How the physics of MRI can be used to draw with spins and why this is useful."
-toc: true
-toc-location: left
 categories: 
     - Bloch simulations
     - MRI physics

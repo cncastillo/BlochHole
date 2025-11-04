@@ -13,6 +13,9 @@ website:
         href: https://github.com/cncastillo/BlochHole/
 format:
   html:
+    toc: true
+    toc-depth: 2
+    toc-location: right
     theme:
       - cosmo
     css: styles.css
