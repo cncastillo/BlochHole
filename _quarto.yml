@@ -10,7 +10,7 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://cncastillo.github.io/BlochHole/
+        href: https://github.com/cncastillo/BlochHole/
 format:
   html:
     theme:

@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/about.html",
+    "items": [
+      "/posts/julia-logo-rf-design/spins_draw_the_julia_logo.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
       "/posts/julia-logo-rf-design/spins_draw_the_julia_logo.html"
