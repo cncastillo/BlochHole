@@ -68,6 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-listing/list.min.js"></script>
+<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -105,6 +107,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-reading-time','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -169,12 +200,7 @@ window.Quarto = {
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/cncastillo"> <i class="bi bi-github" role="img">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://x.com/Carlos_CP92"> <i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://cncastillo.github.io/BlochHole/"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -336,10 +362,10 @@ f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="figures/PXL_20251023_170128686.jpg" class="img-fluid figure-img"></p>
-<figcaption>Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see an spherical water bottle that I used for all these experiments.</figcaption>
+<figcaption>Fig. 6b: I was so excited after making this work in a real scanner, that I took a picture to celebrate. Inside the MRI machine you can see a spherical water bottle that I used for all these experiments.</figcaption>
 </figure>
 </div>
-<p>The previous optimization (Fig. 6) took around 5 hours, as it run on the CPU using <a href="https://github.com/JuliaDiff/FiniteDiff.jl">FiniteDiff.jl</a>. We did the same using <strong>GPU kernels</strong> using <a href="https://github.com/JuliaGPU/KernelAbstractions.jl">KernelAbstractions.jl</a> and <a href="https://github.com/EnzymeAD/Enzyme.jl">Enzyme.jl</a> using reverse-mode AD and we <strong>were able to optimize this in under 5 seconds</strong>.</p>
+<p>The previous optimization (Fig. 6) took around 5 hours, as it ran on the CPU using <a href="https://github.com/JuliaDiff/FiniteDiff.jl">FiniteDiff.jl</a>. We did the same using <strong>GPU kernels</strong> using <a href="https://github.com/JuliaGPU/KernelAbstractions.jl">KernelAbstractions.jl</a> and <a href="https://github.com/EnzymeAD/Enzyme.jl">Enzyme.jl</a> using reverse-mode AD and we <strong>were able to optimize this in under 5 seconds</strong>.</p>
 <p>And now the star of the show, the <strong>Julia logo</strong>, in all its spins’ glory:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -357,7 +383,7 @@ f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
-<p>Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to “draw” the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demostration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person’s anatomy or implants to improve image quality and reduce artifacts.</p>
+<p>Using Julia and GPU‑accelerated simulations, radio‑frequency (RF) pulses were designed in under five seconds. This made it possible to “draw” the Julia logo in a water‑bottle phantom using a real MRI scanner. More than a cool technical demonstration, sub‑minute design times make patient‑specific pulse tailoring practical: pulses could be optimized for a person’s anatomy or implants to improve image quality and reduce artifacts.</p>
 <p>This work was submitted as an abstract to the upcoming International Society for Magnetic Resonance in Medicine (ISMRM) conference.</p>
 </section>
 <section id="acknowledgments" class="level1">
@@ -365,9 +391,15 @@ f = \frac{\gamma}{2\pi} B\quad\text{(Larmor's equation).}
 <p>This work would not have been possible without many Julia packages: CUDA.jl, KernelAbstractions.jl, Enzyme.jl, FiniteDiff.jl, Makie.jl, KomaMRI.jl, and others. Thanks to the Julia community for being awesome 😊. Special thanks to Kareem Fareed, who implemented the Enzyme-based version of this work, to John Pauly for insightful discussions, and to Daniel Ennis for his supervision and continuous support.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

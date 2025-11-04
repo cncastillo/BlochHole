@@ -10,19 +10,19 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/cncastillo
-      - icon: twitter
-        href: https://x.com/Carlos_CP92
+        href: https://cncastillo.github.io/BlochHole/
 format:
   html:
     theme:
       - litera
       - brand
     css: styles.css
-
 comments:
   giscus: 
     repo: cncastillo/BlochHole
+listing:
+  contents: posts
+  fields: [image, date, title, description, reading-time, author]
 
 
 
