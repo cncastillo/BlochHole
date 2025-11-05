@@ -56,13 +56,13 @@ A “pencil‑beam” excitation creates a narrow, cylindrical region of magneti
 
 Now that we know 2D excitation is possible and have an intuition for how it works, how do we design an RF pulse that produces a specific 2D pattern?
 
-We pose this as an **inverse problem** — that is, we look for the input (the RF pulse) that produces a desired output (the magnetization pattern). Or the cause of a given effect. The **forward model** $\mathbf{A}(\mathbf{x})$ predicts the transverse magnetization produced when we play an RF waveform $\mathbf{x}$ (and the chosen gradient waveforms). If our desired magnetization pattern is $\mathbf{b}$, we can formulate the design as a **least‑squares optimization problem**:
+We pose this as an **inverse problem** — that is, we look for the input (the RF pulse) that produces a desired output (the magnetization pattern). Or the cause of a given effect. The **forward model** $\mathrm{\boldsymbol{A}}(\boldsymbol{x})$ predicts the transverse magnetization produced when we play an RF waveform $\boldsymbol{x}$ (and the chosen gradient waveforms). If our desired magnetization pattern is $\boldsymbol{b}$, we can formulate the design as a **least‑squares optimization problem**:
 
 $$
-\min_{\mathbf{x}} \Vert \mathbf{A}(\mathbf{x}) - \mathbf{b} \Vert_2^2.
+\min_{\boldsymbol{x}} \Vert \mathrm{\boldsymbol{A}}(\boldsymbol{x}) - \boldsymbol{b} \Vert_2^2.
 $$
 
-Here the forward model $\mathrm{\mathbf{A}}(\mathbf{x})$ is implemented by a **physics simulation**: we numerically solve the Bloch equations for a given RF waveform and gradient trajectory to predict the resulting transverse magnetization. Rather than reimplementing those equations, we use the Julia package [KomaMRI.jl](https://github.com/JuliaHealth/KomaMRI.jl) to run the simulation and obtain $\mathrm{\mathbf{A}}(\mathbf{x})$.
+Here the forward model $\mathrm{\boldsymbol{A}}(\boldsymbol{x})$ is implemented by a **physics simulation**: we numerically solve the Bloch equations for a given RF waveform and gradient trajectory to predict the resulting transverse magnetization. Rather than reimplementing those equations, we use the Julia package [KomaMRI.jl](https://github.com/JuliaHealth/KomaMRI.jl) to run the simulation and obtain $\mathrm{\boldsymbol{A}}(\boldsymbol{x})$.
 
 ```julia
 using KomaMRICore
